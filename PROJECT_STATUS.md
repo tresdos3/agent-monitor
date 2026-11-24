@@ -15,6 +15,8 @@ owner approval
   5,000 events, 100 sessions, degraded RPC/VCS, and 50 cleanup cycles.
 - `npm run test:lab` passes on 2026-11-24: 27 passed, 0 failed, 0 warnings
   (static config, fixture baseline, API assertions, and the tmux TUI harness).
+- Live fixture Overview check on 2026-11-24: `Agents 5  Running 0  Pending 0`,
+  five `✓` completed agent rows, `COMPLETED 5 / FAILED 0`.
 - `npm pack --dry-run` produces a 65-file, ~55.1 kB tarball; test sources are
   excluded.
 - All product modules are implemented:
@@ -29,7 +31,8 @@ owner approval
 
 ## Manual verification still recommended
 
-- Live TUI walkthrough in host TUI v2.4.1 (sidebar, panel, filters, harness).
+- Fresh delegation walkthrough in host TUI v2.4.1 (sidebar, panel, filters,
+  harness) to observe the running → completed transition.
 - Terminal resizing and narrow-layout fallback.
 - Real multi-session and multi-location behavior.
 
@@ -52,10 +55,10 @@ owner approval
 
 ## Open bugs
 
-- None open in code.
-- `docs/BUG-agent-state-stale.md` — agent definition state and Overview counters
-  can remain stale after completion. Fix is in code with regression tests;
-  the live delegation walkthrough is still pending owner verification.
+- None.
+- `docs/BUG-agent-state-stale.md` — fixed and retained as a regression record.
+  Counters and glyphs were confirmed live; a fresh delegation walkthrough is
+  still recommended.
 
 ## Known limitations
 

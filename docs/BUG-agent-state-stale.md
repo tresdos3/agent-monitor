@@ -1,6 +1,6 @@
 # BUG: Agent definition state and counters remain stale after completion
 
-**Status:** FIXED IN CODE — regression tests pass; live walkthrough still pending
+**Status:** FIXED — code, unit tests, LAB verifier, and a live fixture check pass; a fresh delegation walkthrough is still recommended
 **Reported:** 2026-11-24
 **Severity:** Medium (misleading observability UI; no data loss)
 **Component:** TUI Overview panel / agent definitions / status derivation
@@ -156,7 +156,11 @@ The integration mock now mirrors the real client surface:
   baseline, API outcome assertions (`succeeded`), all four TUI tabs, harness
   evidence groups, and the 60×30 narrow resize.
 - The lab harness does not run the delegation prompt, so it cannot reproduce
-  the user's exact stale-green sequence. Live visual confirmation remains.
+  the user's exact stale-green sequence. A live fixture check of the finished
+  sessions was run instead (2026-11-24): the Overview showed
+  `Agents 5  Running 0  Pending 0`, five `✓` completed rows, and
+  `COMPLETED 5 / FAILED 0`. No green `●` remained. A fresh delegation
+  walkthrough is still recommended to confirm the live transition.
 
 ---
 
