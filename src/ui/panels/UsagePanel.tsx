@@ -15,7 +15,7 @@ import { Section } from "../components/Section.js"
 import { UnavailableState } from "../components/UnavailableState.js"
 import { UsageBreakdown } from "../components/UsageBreakdown.js"
 import { compactNumber } from "../components/format.js"
-import type { Styles } from "../theme.js"
+import { truncate, type Styles } from "../theme.js"
 
 export interface UsagePanelProps {
   readonly usage: () => UsageSnapshot | undefined
@@ -50,6 +50,10 @@ export function UsagePanel(props: UsagePanelProps) {
   const models = () => usageByModel(props.nodes())
   const agentMax = () => Math.max(...agents().map((entry) => entry.total), 1)
   const modelMax = () => Math.max(...models().map((entry) => entry.total), 1)
+  const labelWidth = () => {
+    const width = props.width ?? 80
+    return width < 64 ? 14 : width < 100 ? 24 : 34
+  }
   const counts = () => {
     const files = props.project().changedFiles
     return {
@@ -81,11 +85,11 @@ export function UsagePanel(props: UsagePanelProps) {
           <For each={agents()}>
             {(entry) => (
               <box flexDirection="row" gap={1}>
-                <text fg={props.styles.base}>{entry.label}</text>
+                <text fg={props.styles.base}>{truncate(entry.label, labelWidth())}</text>
                 <MiniBar value={entry.total} max={agentMax()} styles={props.styles} color={props.styles.info} width={8} />
                 <text fg={props.styles.muted}>{compactNumber(entry.total)}</text>
                 <Show when={entry.model}>
-                  {(model: string) => <text fg={props.styles.faint}>{model}</text>}
+                  {(model: string) => <text fg={props.styles.faint}>{truncate(model, labelWidth())}</text>}
                 </Show>
               </box>
             )}
@@ -98,7 +102,7 @@ export function UsagePanel(props: UsagePanelProps) {
           <For each={models()}>
             {(entry) => (
               <box flexDirection="row" gap={1}>
-                <text fg={props.styles.base}>{entry.model}</text>
+                <text fg={props.styles.base}>{truncate(entry.model, labelWidth())}</text>
                 <MiniBar value={entry.total} max={modelMax()} styles={props.styles} color={props.styles.success} width={8} />
                 <text fg={props.styles.muted}>{compactNumber(entry.total)}</text>
               </box>

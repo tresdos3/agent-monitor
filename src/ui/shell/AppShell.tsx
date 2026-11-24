@@ -16,6 +16,7 @@ export interface AppShellProps {
   readonly status: readonly StatusItem[]
   readonly styles: Styles
   readonly width: number
+  readonly height?: number
   readonly compact?: boolean
   readonly children: JSX.Element
   readonly aside?: JSX.Element
@@ -24,19 +25,32 @@ export interface AppShellProps {
 /** Responsive application shell: header, tabs, status line, and one or two content columns. */
 export function AppShell(props: AppShellProps) {
   const mode = () => layoutMode(props.width)
-  const twoColumns = () => !props.compact && allowTwoColumns(props.width) && props.aside !== undefined
+  const twoColumns = () =>
+    !props.compact &&
+    allowTwoColumns(props.width) &&
+    (props.height === undefined || props.height >= 22) &&
+    props.aside !== undefined
 
   return (
-    <box flexDirection="column" gap={1}>
-      <AppHeader title={props.title} subtitle={props.subtitle} live={props.live} styles={props.styles} />
+    <box flexDirection="column" gap={0}>
+      <AppHeader
+        title={props.title}
+        subtitle={mode() === "narrow" ? undefined : props.subtitle}
+        live={props.live}
+        styles={props.styles}
+        activeTab={mode() === "narrow" ? props.tabs.find((tab) => tab.id === props.active)?.label : undefined}
+      />
       <TabBar
         tabs={props.tabs}
         active={props.active}
         onSelect={props.onSelect}
         styles={props.styles}
         showShortcuts={mode() !== "narrow"}
+        width={props.width}
       />
+      <text fg={props.styles.border}>{"━".repeat(Math.max(8, Math.min(props.width, 120)))}</text>
       <StatusLine items={props.status} styles={props.styles} />
+      <text fg={props.styles.faint}> </text>
 
       <Show
         when={twoColumns()}

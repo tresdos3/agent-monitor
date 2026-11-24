@@ -6,6 +6,7 @@ export interface AppHeaderProps {
   readonly subtitle?: string
   readonly live?: boolean
   readonly styles: Styles
+  readonly activeTab?: string
 }
 
 export function AppHeader(props: AppHeaderProps) {
@@ -19,6 +20,9 @@ export function AppHeader(props: AppHeaderProps) {
       </Show>
       <Show when={props.live}>
         <text fg={props.styles.success}>● LIVE</text>
+      </Show>
+      <Show when={props.activeTab} keyed>
+        {(tab: string) => <text fg={props.styles.action}>· {tab}</text>}
       </Show>
     </box>
   )

@@ -85,8 +85,13 @@ export default Plugin.define({
     const [statusNotes, setStatusNotes] = createSignal<ReadonlyMap<string, string>>(new Map())
     const [activeSessions, setActiveSessions] = createSignal<ReadonlySet<string>>(new Set())
     const readWidth = () => context.renderer.terminalWidth || context.renderer.width || 80
+    const readHeight = () => context.renderer.terminalHeight || 40
     const [terminalWidth, setTerminalWidth] = createSignal(readWidth())
-    const onResize = () => setTerminalWidth(readWidth())
+    const [terminalHeight, setTerminalHeight] = createSignal(readHeight())
+    const onResize = () => {
+      setTerminalWidth(readWidth())
+      setTerminalHeight(readHeight())
+    }
     context.renderer.on("resize", onResize)
 
     const nodes = createMemo(() =>
@@ -642,6 +647,7 @@ export default Plugin.define({
           close={panel.close}
           focus={panel.focus}
           width={panel.width}
+          height={terminalHeight()}
         />
       ),
     })
@@ -679,6 +685,7 @@ export default Plugin.define({
             styles={styles}
             close={() => context.ui.router.navigate({ type: "home" })}
             width={terminalWidth()}
+            height={terminalHeight()}
           />
         )
       },
@@ -791,6 +798,24 @@ export default Plugin.define({
       commands: [
         { id: "agent-monitor.open.close", title: "Agent Monitor: close", bind: "escape", run: closeMonitor },
         { id: "agent-monitor.open.close.q", title: "Agent Monitor: close", bind: "q", run: closeMonitor },
+        {
+          id: "agent-monitor.open.section.next",
+          title: "Agent Monitor: next panel",
+          bind: "tab",
+          run: () => {
+            const index = SECTIONS.findIndex((entry) => entry.id === section())
+            setSection(SECTIONS[(index + 1) % SECTIONS.length].id)
+          },
+        },
+        {
+          id: "agent-monitor.open.section.previous",
+          title: "Agent Monitor: previous panel",
+          bind: "shift+tab",
+          run: () => {
+            const index = SECTIONS.findIndex((entry) => entry.id === section())
+            setSection(SECTIONS[(index - 1 + SECTIONS.length) % SECTIONS.length].id)
+          },
+        },
         ...SECTIONS.map((entry, index) => ({
           id: `agent-monitor.open.section.${entry.id}`,
           title: `Agent Monitor: ${entry.label}`,
@@ -801,6 +826,8 @@ export default Plugin.define({
       bindings: [
         "agent-monitor.open.close",
         "agent-monitor.open.close.q",
+        "agent-monitor.open.section.next",
+        "agent-monitor.open.section.previous",
         ...SECTIONS.map((entry) => `agent-monitor.open.section.${entry.id}`),
       ],
     }))

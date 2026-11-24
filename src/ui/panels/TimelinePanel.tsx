@@ -19,6 +19,7 @@ import { EmptyState } from "../components/EmptyState.js"
 import { EventRow } from "../components/EventRow.js"
 import { FilterChip } from "../components/FilterChip.js"
 import { KeyValue } from "../components/KeyValue.js"
+import { VerificationSummary } from "../components/VerificationSummary.js"
 import { MetricGrid } from "../components/MetricGrid.js"
 import { Section } from "../components/Section.js"
 import { compactNumber, historyLabel } from "../components/format.js"
@@ -55,6 +56,7 @@ export interface TimelinePanelProps {
   readonly close: () => void
   readonly focus?: () => void
   readonly width?: number
+  readonly height?: number
 }
 
 export type MonitorSection = "overview" | "timeline" | "harness" | "usage"
@@ -107,6 +109,7 @@ export function TimelinePanel(props: TimelinePanelProps) {
       ]}
       styles={props.styles}
       width={props.width ?? 80}
+      height={props.height}
       aside={
         props.section() === "overview" ? (
           <box flexDirection="column" gap={1}>
@@ -139,6 +142,10 @@ export function TimelinePanel(props: TimelinePanelProps) {
               </Section>
             </Show>
 
+            <Section title="VERIFICATION" styles={props.styles}>
+              <VerificationSummary report={props.harness} styles={props.styles} />
+            </Section>
+
             <Section title="USAGE SUMMARY" styles={props.styles}>
               <KeyValue label="Input" value={compactNumber(props.usage()?.input)} styles={props.styles} />
               <KeyValue label="Output" value={compactNumber(props.usage()?.output)} styles={props.styles} />
@@ -164,7 +171,7 @@ export function TimelinePanel(props: TimelinePanelProps) {
       <scrollbox>
         <Show when={props.quota()} keyed>
           {(notice: QuotaNotice) => (
-            <Section title="HOST QUOTA LIMIT" styles={props.styles}>
+            <Section title="HOST QUOTA LIMIT" styles={props.styles} variant="boxed">
               <text fg={props.styles.warning}>⚠ Observed host limit — agents may be blocked</text>
               <text fg={props.styles.faint}>{truncate(notice.message, 72)}</text>
               <text fg={props.styles.faint}>Source: observed failure event · no estimate, no retry</text>
