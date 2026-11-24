@@ -125,6 +125,22 @@ provenance.
 project state is scoped to the active location rather than the process default.
 `Vcs.FileStatus` is `{ file, status: added|deleted|modified, additions, deletions }`.
 
+## Host quota / free usage limits
+
+Host v2.4.1 has **no dedicated quota event**. A free-model usage limit is
+delivered as a generic `session.execution.failed` whose `error` is a
+`Session.StructuredError` with free-form `type` and `message`; the same shape is
+used by `session.step.failed`, `session.tool.failed`, `session.retry.scheduled`,
+and `session.status` retry actions. `client.experimental.usage.limits()` exists
+but returns `data: null` for workspaces without an OpenCode Go subscription or
+budget, so it cannot report free-model quota state here.
+
+The monitor therefore reports only what it observes: `quotaNoticeFromEvents()`
+matches quota/limit/subscribe language in failure `error.type`/`error.message`
+and renders a `HOST QUOTA LIMIT` section in the Overview panel and sidebar. It
+never invents a percentage, retry time, or quota number, never retries a model
+call, and never changes agent state. Evidence is labeled `observed`.
+
 ## Unresolved / documented limitations
 
 1. Sidebar visibility is user-controlled and layout-dependent.
@@ -137,6 +153,12 @@ project state is scoped to the active location rather than the process default.
    installed and satisfies the `>=26.4.0` requirement of OpenTUI 0.9.9 and
    other 0.6.x–0.9.x releases. `package.json` `engines.node` is now
    `>=26.4.0`; `npm install` no longer reports `EBADENGINE`.
+8. Quota detection relies on free-form error text because v2.4.1 has no typed
+   quota event; unrelated failures with similar wording could match. The notice
+   is a visual hint only and never alters agent state.
+9. On a fresh host server the RPC endpoint can briefly return
+   `rpc.unavailable` while plugins are still loading. The TUI degrades to
+   `History live-only` and continues with live `context.data.on` events.
 
 ## Adopted mitigations
 
@@ -150,6 +172,12 @@ project state is scoped to the active location rather than the process default.
   `context.client.rpc(AgentMonitor).events.on("normalized", ...)` in the TUI,
   with `history()` hydration. `context.data.on` remains the live source;
   events are deduplicated by `event.id` to avoid double counting.
+- Normalized events omit absent optional keys instead of emitting
+  `key: undefined`. The RPC output schema rejects explicit `undefined` values,
+  which previously made `history()` fail with `rpc.invalid_output` whenever an
+  event had no `sessionID` or `location`.
+- Quota notices are derived from observed failure text and rendered as an
+  `observed` hint; no number, retry, or agent-state change is invented.
 - `PermissionRequest` has no `created` field, so permission timestamps come
   from the observed `permission.asked` event or render as `Unavailable`.
 - Phase 3 uses `context.client.vcs.get()` and `vcs.status()` with the active

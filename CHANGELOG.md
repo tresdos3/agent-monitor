@@ -4,6 +4,12 @@ All notable changes to this project are documented here.
 
 ## [Unreleased]
 
+### Added
+
+- Observed host quota handling: a `HOST QUOTA LIMIT` section in the Overview
+  panel and sidebar when a failure event contains quota/limit language. It is
+  labeled `observed`; no estimate, retry, or agent-state change is invented.
+
 ### Fixed
 
 - Agent definitions now link to the **newest** session for their agent ID, so a
@@ -11,12 +17,17 @@ All notable changes to this project are documented here.
   `Running` metric now uses definition-derived counts like the rest of the panel.
 - Project/VCS refresh is location-scoped via `vcs.get`/`vcs.status` with
   `location.directory`, and the integration mock mirrors that client surface.
+- RPC history hydration: normalized events no longer emit explicit
+  `undefined` optional keys, which caused `rpc.invalid_output` (HTTP 500) when
+  an event had no `sessionID` or `location`. Verified with a fresh host server:
+  the RPC now returns HTTP 200 with valid JSON.
 
 ### Changed
 
 - Added regression coverage for duplicate agent IDs (stale running + newer
-  completed) and extended the LAB verifier with harness evidence labels, a
-  visible changed-file check, and a 60×30 resize survival check.
+  completed), RPC-safe normalization, and quota detection; extended the LAB
+  verifier with harness evidence labels, a visible changed-file check, and a
+  60×30 resize survival check.
 
 ## [1.0.0] — 2026-11-23
 

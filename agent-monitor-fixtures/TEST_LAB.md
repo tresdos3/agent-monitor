@@ -12,7 +12,7 @@ opencode --version             # v2.4.1
 
 cd ..                          # from agent-monitor-fixtures to repo root
 npm run verify:compat
-npm test                       # 92 tests should pass
+npm test                       # 100 tests should pass
 ```
 
 The fake repo must have its dev dependencies installed:
@@ -310,3 +310,28 @@ Copy `fixtures/missing-evidence/` outside this repo and open the plugin there.
 - [ ] Harness groups checks by evidence level.
 - [ ] Filters and narrow layout work.
 - [ ] Missing-evidence location shows `Unavailable`, never guesses.
+
+## Automated audit result (2026-11-24)
+
+`npm run test:lab` passed again: **27 passed, 0 failed, 0 warnings**. The
+checklist above was checked against live pane captures where possible:
+
+| Checklist item | Result |
+|---|---|
+| Sidebar and footer canary render | PASS — `MONITOR 0● 0◷` visible in pane capture |
+| `Ctrl+G` opens/closes panel; tabs `1`–`4` | PASS — all four tab headers captured |
+| Five agent definitions with completed glyphs | PASS — `Agents 5  Running 0`, five `✓`, `COMPLETED 5` |
+| Git shows 3 changed files on `main` | PASS — fixture Git state checks in LAB verifier |
+| Harness groups by evidence level | PASS — `Verified 0 Observed 8 Declared 0 Missing 1 Failed 0`, 89% evidenced |
+| Usage token breakdown / cost provenance | PARTIAL — token categories and per-agent rows render; current session shows `Unavailable`; estimated cost toggle needs a human-visible run |
+| Filters (`agent`/`kind`/`severity` chips) | PASS as UI — all three chips render on tab `2`; filter selection not exercised |
+| Narrow layout | PASS — 60×30 pane shows single column, no tab prefixes, no crash |
+| Missing-evidence location | NOT RUN — requires copying a fixture outside this repo |
+| Native permission prompt (scenario 2) | PENDING HUMAN — no permission was approved or rejected automatically |
+| Failure → recovery prompts (scenario 3) | BLOCKED — host reported `Free usage limit reached (QuotaExceeded)`; new model calls are refused |
+| Live running → completed transition (scenario 1) | PENDING HUMAN — a fresh delegation run is needed once quota allows |
+
+Environment note: host logs show `AI.Error.QuotaExceeded: Free usage limit
+reached` (2026-11-24 16:49Z). Agent Monitor now surfaces an observed
+`HOST QUOTA LIMIT` notice rather than inventing quota numbers or retrying.
+See `docs/COMPATIBILITY_REPORT.md` in the parent project.

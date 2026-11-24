@@ -39,6 +39,15 @@ describe("normalizeEvent", () => {
     expect(event?.severity).toBe("info")
   })
 
+  it("omits undefined optional keys so RPC output stays JSON-valid", () => {
+    const event = normalizeEvent({ type: "vcs.branch.updated", created: 1, data: {} })
+    expect(event).toBeDefined()
+    expect(Object.keys(event ?? {})).not.toContain("sessionID")
+    expect(Object.keys(event ?? {})).not.toContain("location")
+    // JSON round-trip must not drop keys or produce an invalid value.
+    expect(JSON.parse(JSON.stringify(event))).toEqual(event)
+  })
+
   it("ignores malformed input", () => {
     expect(normalizeEvent(null)).toBeUndefined()
     expect(normalizeEvent("not an event")).toBeUndefined()

@@ -86,16 +86,20 @@ export function normalizeEvent(input: unknown): NormalizedEvent | undefined {
   const kind = KIND_BY_TYPE[type] ?? "unknown"
   const location = isRecord(input.location) ? stringField(input.location, "directory") : undefined
 
+  const sessionID = stringField(data, "sessionID")
+  // Omit absent optional keys entirely: the RPC output schema rejects an
+  // explicit `undefined` value ("Expected JSON value"), which makes history
+  // hydration fail with rpc.invalid_output whenever an event has no session.
   return {
     id: stringField(input, "id") ?? `${type}:${String(input.created ?? "unknown")}`,
     created: typeof input.created === "number" ? input.created : Date.now(),
     kind,
     sourceType: type,
-    sessionID: stringField(data, "sessionID"),
+    ...(sessionID ? { sessionID } : {}),
     title: TITLE_BY_KIND[kind],
     severity: severityFor(kind, data),
     data,
-    location: location ? { directory: location } : undefined,
+    ...(location ? { location: { directory: location } } : {}),
   }
 }
 

@@ -11,10 +11,15 @@ owner approval
 
 - `npm run verify:compat` passes: the host TUI 2.4.1 matches `@opencode/plugin@2.4.1`.
 - `npm run typecheck` passes.
-- `npm test` passes: 94 tests across 16 files, including stability tests for
+- `npm test` passes: 100 tests across 17 files, including stability tests for
   5,000 events, 100 sessions, degraded RPC/VCS, and 50 cleanup cycles.
 - `npm run test:lab` passes on 2026-11-24: 27 passed, 0 failed, 0 warnings
   (static config, fixture baseline, API assertions, and the tmux TUI harness).
+- RPC history verified against a fresh host server: `POST
+  /api/rpc/agent-monitor/history` returns HTTP 200 with valid JSON after
+  omitting `undefined` optional keys from normalized events.
+- Free-model quota notice handling added: observed failure text produces a
+  labeled `HOST QUOTA LIMIT` hint in the Overview panel and sidebar.
 - Live fixture Overview check on 2026-11-24: `Agents 5  Running 0  Pending 0`,
   five `✓` completed agent rows, `COMPLETED 5 / FAILED 0`.
 - `npm pack --dry-run` produces a 65-file, ~55.1 kB tarball; test sources are
@@ -26,6 +31,7 @@ owner approval
   - token/cost breakdown with opt-in estimates and provenance
   - Git status and observed test/build evidence
   - Harness Inspector with evidence levels and quality dashboard
+  - observed host quota-limit notice (no invented numbers or retries)
 - All event subscriptions, RPC listeners, slots, and the server stream are
   cleaned up on unload.
 

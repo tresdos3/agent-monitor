@@ -1,4 +1,5 @@
 import { Show } from "solid-js"
+import type { QuotaNotice } from "../../adapters/usage/quota.js"
 import { selectCurrentActivity, type ActivityView } from "../../application/selectors.js"
 import type { AgentDefinition } from "../../domain/agents.js"
 import { totalTokens, type AgentNode, type TimelineState, type TokenUsage } from "../../domain/model.js"
@@ -15,6 +16,7 @@ export interface SidebarProps {
   readonly nodes: () => readonly AgentNode[]
   readonly definitions: () => readonly AgentDefinition[]
   readonly timeline: () => TimelineState
+  readonly quota: () => QuotaNotice | undefined
   readonly pendingBySession: () => ReadonlyMap<string, number>
   readonly loading: () => boolean
   readonly error: () => string | undefined
@@ -62,6 +64,15 @@ export function Sidebar(props: SidebarProps) {
       </Show>
       <Show when={!props.loading() && !props.error() && props.nodes().length === 0}>
         <text fg={props.styles.faint}>No agents observed</text>
+      </Show>
+
+      <Show when={props.quota()} keyed>
+        {(notice: QuotaNotice) => (
+          <Section title="HOST QUOTA LIMIT" styles={props.styles}>
+            <text fg={props.styles.warning}>⚠ Observed host limit</text>
+            <text fg={props.styles.faint}>{notice.message}</text>
+          </Section>
+        )}
       </Show>
 
       <Show when={props.nodes().length > 0}>

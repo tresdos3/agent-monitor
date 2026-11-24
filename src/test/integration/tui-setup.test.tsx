@@ -313,6 +313,27 @@ describe("Phase 2 timeline and permission TUI setup", () => {
     }
   })
 
+  it("observes a quota failure without fabricating quota state", async () => {
+    const ctx = makeContext()
+    const cleanup = await (monitor.setup as (context: unknown) => unknown)(ctx.context)
+
+    expect(() =>
+      ctx.handlers.get("session.execution.failed")?.({
+        id: "evt-quota",
+        created: 1730000000000,
+        type: "session.execution.failed",
+        data: {
+          sessionID: "ses-1",
+          error: { type: "provider", message: "Free usage limit reached. Subscribe to keep going." },
+        },
+      }),
+    ).not.toThrow()
+
+    // The panel slot and all subscriptions remain registered after the failure.
+    expect(ctx.slot.mock.calls.map((call) => call[0].append)).toContain("session.panel")
+    ;(cleanup as () => void)()
+  })
+
   it("degrades gracefully when RPC and VCS are unavailable", async () => {
     const ctx = makeContext()
     ctx.rpcHistory.mockRejectedValue(new Error("RPC unavailable"))

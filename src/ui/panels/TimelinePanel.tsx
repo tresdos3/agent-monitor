@@ -2,6 +2,7 @@ import { For, onMount, Show } from "solid-js"
 import type { PermissionView } from "../../adapters/permissions/permission.js"
 import { selectCurrentActivity, type ActivityView } from "../../application/selectors.js"
 import { eventDetail, eventDuration } from "../../application/timeline.js"
+import type { QuotaNotice } from "../../adapters/usage/quota.js"
 import type { HarnessReport } from "../../domain/harness.js"
 import type { AgentDefinition } from "../../domain/agents.js"
 import type { AgentNode, TimelineState, TokenUsage } from "../../domain/model.js"
@@ -29,6 +30,7 @@ export interface TimelinePanelProps {
   readonly sessionID?: string
   readonly timeline: () => TimelineState
   readonly allTimeline: () => TimelineState
+  readonly quota: () => QuotaNotice | undefined
   readonly nodes: () => readonly AgentNode[]
   readonly definitions: () => readonly AgentDefinition[]
   readonly pendingBySession: () => ReadonlyMap<string, number>
@@ -160,6 +162,16 @@ export function TimelinePanel(props: TimelinePanelProps) {
       </Show>
 
       <scrollbox>
+        <Show when={props.quota()} keyed>
+          {(notice: QuotaNotice) => (
+            <Section title="HOST QUOTA LIMIT" styles={props.styles}>
+              <text fg={props.styles.warning}>⚠ Observed host limit — agents may be blocked</text>
+              <text fg={props.styles.faint}>{truncate(notice.message, 72)}</text>
+              <text fg={props.styles.faint}>Source: observed failure event · no estimate, no retry</text>
+            </Section>
+          )}
+        </Show>
+
         <Show when={props.section() === "overview"}>
           <Section title="AGENTS" styles={props.styles}>
             <AgentDefinitionList definitions={props.definitions} styles={props.styles} compact={narrow()} />

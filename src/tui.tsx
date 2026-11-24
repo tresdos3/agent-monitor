@@ -13,6 +13,7 @@ import { testEvidenceFromEvents } from "./adapters/project/test-evidence.js"
 import { sessionBelongsToLocation, sessionToLike } from "./adapters/sessions/session.js"
 import { estimateCost, type ModelLike } from "./adapters/usage/pricing.js"
 import { usageFromTokens } from "./adapters/usage/usage.js"
+import { quotaNoticeFromEvents } from "./adapters/usage/quota.js"
 import { normalizeEvent, normalizeEvents } from "./application/normalize.js"
 import { buildAgentTree, mapSessionStatus, type SessionLike } from "./application/reducer.js"
 import {
@@ -112,6 +113,7 @@ export default Plugin.define({
       events: filterEvents(timeline(), filters),
     }))
     const evidence = createMemo(() => testEvidenceFromEvents(timeline().events))
+    const quota = createMemo(() => quotaNoticeFromEvents(timeline().events))
     const estimate = createMemo<PricingEstimate | undefined>(() => {
       if (!settings.showEstimate) return undefined
       const snapshot = usage()
@@ -576,6 +578,7 @@ export default Plugin.define({
           nodes={nodes}
           definitions={definitions}
           timeline={timeline}
+          quota={quota}
           pendingBySession={pendingBySession}
           loading={loading}
           error={error}
@@ -605,6 +608,7 @@ export default Plugin.define({
           sessionID={panel.sessionID}
           timeline={filteredTimeline}
           allTimeline={timeline}
+          quota={quota}
           nodes={nodes}
           definitions={definitions}
           pendingBySession={pendingBySession}
@@ -642,6 +646,7 @@ export default Plugin.define({
             sessionID={sessionID}
             timeline={filteredTimeline}
             allTimeline={timeline}
+            quota={quota}
             nodes={nodes}
             definitions={definitions}
             pendingBySession={pendingBySession}
