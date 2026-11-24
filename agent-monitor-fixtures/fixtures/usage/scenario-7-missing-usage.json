@@ -1,0 +1,18 @@
+{
+  "scenario": "missing-observability",
+  "description": "No usage event, no pricing metadata, and an unsupported capability.",
+  "sessionID": "ses-unknown",
+  "event": {
+    "id": "evt-700",
+    "created": 1730000700000,
+    "type": "session.status",
+    "data": { "sessionID": "ses-unknown", "status": "idle" }
+  },
+  "missing": {
+    "tokens": true,
+    "cost": true,
+    "pricingVersion": true,
+    "agentState": true
+  },
+  "expectedDisplay": "Unavailable"
+}

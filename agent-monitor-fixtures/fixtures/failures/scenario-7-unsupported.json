@@ -1,0 +1,11 @@
+{
+  "scenario": "unsupported-capabilities",
+  "description": "Capabilities the SDK does not expose must be reported honestly.",
+  "unsupported": [
+    { "capability": "first-class waiting agent state", "replacement": "derive from pending permission/form requests and label as derived" },
+    { "capability": "session attribution on filesystem.changed", "replacement": "correlate with observed tool calls and label as inferred" },
+    { "capability": "test/build result events", "replacement": "observe shell tool execution and label evidence level" },
+    { "capability": "pricing version in usage events", "replacement": "show cost as reported by the host; label own estimates" }
+  ],
+  "unknownEventTypes": ["vendor.custom.event", "session.legacy.updated"]
+}

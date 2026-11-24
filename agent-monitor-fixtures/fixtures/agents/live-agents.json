@@ -1,0 +1,11 @@
+{
+  "scenario": "live-agent-definitions",
+  "default_agent": "orchestrator",
+  "agents": [
+    { "id": "orchestrator", "mode": "primary", "role": "delegates work" },
+    { "id": "backend-agent", "mode": "subagent", "role": "edits src/api.ts, reads demo.env" },
+    { "id": "test-agent", "mode": "subagent", "role": "runs npm test (fails)" },
+    { "id": "docs-agent", "mode": "subagent", "role": "updates docs/architecture.md" },
+    { "id": "recovery-agent", "mode": "subagent", "role": "runs npm run test:pass" }
+  ]
+}

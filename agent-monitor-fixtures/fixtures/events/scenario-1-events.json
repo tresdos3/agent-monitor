@@ -1,0 +1,33 @@
+[
+  {
+    "id": "evt-100",
+    "created": 1730000000000,
+    "type": "session.created",
+    "location": { "directory": "/fake/agent-monitor-fixtures" },
+    "data": { "sessionID": "ses-orchestrator", "agent": "orchestrator", "title": "Coordinate fixture work" }
+  },
+  {
+    "id": "evt-101",
+    "created": 1730000005000,
+    "type": "session.forked",
+    "data": { "sessionID": "ses-backend", "parentID": "ses-orchestrator", "boundary": { "type": "through", "messageID": "msg-0" } }
+  },
+  {
+    "id": "evt-102",
+    "created": 1730000010000,
+    "type": "session.agent.selected",
+    "data": { "sessionID": "ses-test", "agent": "test-agent", "previous": "orchestrator" }
+  },
+  {
+    "id": "evt-103",
+    "created": 1730000015000,
+    "type": "session.execution.started",
+    "data": { "sessionID": "ses-docs" }
+  },
+  {
+    "id": "evt-104",
+    "created": 1730000020000,
+    "type": "session.execution.succeeded",
+    "data": { "sessionID": "ses-docs" }
+  }
+]

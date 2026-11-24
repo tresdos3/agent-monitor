@@ -1,0 +1,28 @@
+{
+  "scenario": "usage-analytics",
+  "description": "Deterministic usage values with explicit provenance.",
+  "sessionID": "ses-backend",
+  "model": { "providerID": "anthropic", "modelID": "claude-sonnet-4-5" },
+  "event": {
+    "id": "evt-400",
+    "created": 1730000300000,
+    "type": "session.usage.updated",
+    "data": {
+      "sessionID": "ses-backend",
+      "cost": 0.0421,
+      "tokens": {
+        "input": 12400,
+        "output": 3200,
+        "reasoning": 800,
+        "cache": { "read": 6400, "write": 1200 }
+      }
+    }
+  },
+  "pricing": {
+    "source": "models.dev via host model definitions",
+    "version": "2.4.1-model-catalog",
+    "date": "2026-11-23",
+    "note": "Cost in the event is reported by the host. Any monitor-computed figure must be labeled Estimated."
+  },
+  "expectedTotalTokens": 24000
+}

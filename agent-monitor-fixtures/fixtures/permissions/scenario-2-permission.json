@@ -1,0 +1,34 @@
+{
+  "scenario": "permission-request",
+  "description": "A child agent requests an edit. The monitor shows the request; a human decides via the host's native prompt.",
+  "events": [
+    {
+      "id": "evt-200",
+      "created": 1730000100000,
+      "type": "permission.asked",
+      "data": {
+        "id": "perm-1",
+        "sessionID": "ses-test",
+        "action": "edit",
+        "resources": ["src/api.ts"],
+        "save": ["src/api.ts"],
+        "source": { "type": "tool", "messageID": "msg-test-1", "id": "call-test-1" },
+        "message": "Allow editing src/api.ts?"
+      }
+    },
+    {
+      "id": "evt-201",
+      "created": 1730000105000,
+      "type": "permission.replied",
+      "data": { "sessionID": "ses-test", "requestID": "perm-1", "reply": "once" }
+    }
+  ],
+  "pendingRequest": {
+    "id": "perm-2",
+    "sessionID": "ses-test",
+    "action": "shell",
+    "resources": ["npm test"],
+    "source": { "type": "tool", "messageID": "msg-test-2", "id": "call-test-2" }
+  },
+  "nativeDecisions": ["once", "always", "reject"]
+}

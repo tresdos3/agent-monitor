@@ -1,0 +1,47 @@
+{
+  "name": "opencode-agent-monitor",
+  "version": "1.0.0",
+  "description": "Full Development Observability for the host TUI",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tui": "./src/tui.tsx",
+    "./rpc": "./src/rpc.ts"
+  },
+  "files": [
+    "src",
+    "!src/test",
+    "docs",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "verify:compat": "node scripts/verify-compat.mjs",
+    "prepublishOnly": "npm run verify:compat && npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "@opencode/client": "2.4.1",
+    "@opencode/plugin": "2.4.1"
+  },
+  "peerDependencies": {
+    "@opentui/core": ">=0.8.0",
+    "@opentui/solid": ">=0.8.0",
+    "solid-js": ">=1.9.0"
+  },
+  "devDependencies": {
+    "@opentui/core": "0.9.9",
+    "@opentui/solid": "0.9.9",
+    "@types/node": "^24.0.0",
+    "solid-js": "^1.9.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  },
+  "engines": {
+    "node": ">=26.4.0"
+  }
+}

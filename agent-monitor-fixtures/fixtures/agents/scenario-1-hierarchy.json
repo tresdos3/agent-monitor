@@ -1,0 +1,37 @@
+{
+  "scenario": "multi-agent-execution",
+  "description": "Orchestrator with three child sessions; statuses use observed V2 session data only.",
+  "sessions": [
+    {
+      "id": "ses-orchestrator",
+      "agent": "orchestrator",
+      "title": "Coordinate fixture work",
+      "status": "running",
+      "time": { "created": 1730000000000, "updated": 1730000180000 }
+    },
+    {
+      "id": "ses-backend",
+      "parentID": "ses-orchestrator",
+      "agent": "backend-agent",
+      "title": "Edit API layer",
+      "status": "running",
+      "time": { "created": 1730000005000, "updated": 1730000175000 }
+    },
+    {
+      "id": "ses-test",
+      "parentID": "ses-orchestrator",
+      "agent": "test-agent",
+      "title": "Wait for permission",
+      "status": "idle",
+      "time": { "created": 1730000010000, "updated": 1730000160000 }
+    },
+    {
+      "id": "ses-docs",
+      "parentID": "ses-orchestrator",
+      "agent": "docs-agent",
+      "title": "Update docs",
+      "outcome": "succeeded",
+      "time": { "created": 1730000015000, "updated": 1730000150000 }
+    }
+  ]
+}

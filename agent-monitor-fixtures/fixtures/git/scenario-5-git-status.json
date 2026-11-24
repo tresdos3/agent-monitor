@@ -1,0 +1,15 @@
+{
+  "scenario": "git-activity",
+  "description": "Known working-tree changes used to validate the Project panel.",
+  "branch": { "current": "feat/agent-monitor", "default": "main" },
+  "status": [
+    { "file": "src/api.ts", "status": "modified", "additions": 12, "deletions": 3 },
+    { "file": "src/new-service.ts", "status": "added", "additions": 40, "deletions": 0 },
+    { "file": "docs/old-notes.md", "status": "deleted", "additions": 0, "deletions": 18 }
+  ],
+  "filesystemEvents": [
+    { "id": "evt-500", "created": 1730000500000, "type": "filesystem.changed", "data": { "file": "src/api.ts", "event": "change" } },
+    { "id": "evt-501", "created": 1730000501000, "type": "filesystem.changed", "data": { "file": "src/new-service.ts", "event": "add" } }
+  ],
+  "attributionNote": "filesystem.changed has no sessionID; agent attribution must remain inferred unless corroborated by an observed tool call."
+}

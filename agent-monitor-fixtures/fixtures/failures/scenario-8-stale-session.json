@@ -1,0 +1,10 @@
+{
+  "scenario": "stale-session",
+  "description": "A session that has been idle beyond the staleness threshold.",
+  "sessionID": "ses-stale",
+  "lastActivity": 1729000000000,
+  "staleAfterMs": 900000,
+  "status": "idle",
+  "events": [],
+  "expectedDisplay": "Stale / Disconnected — no recent activity; no fabricated status"
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "evt-300",
+    "created": 1730000200000,
+    "type": "session.execution.started",
+    "data": { "sessionID": "ses-backend" }
+  },
+  {
+    "id": "evt-301",
+    "created": 1730000202000,
+    "type": "session.tool.input.started",
+    "data": { "sessionID": "ses-backend", "assistantMessageID": "msg-b-1", "id": "call-b-1", "name": "edit" }
+  },
+  {
+    "id": "evt-302",
+    "created": 1730000204000,
+    "type": "session.tool.failed",
+    "data": { "sessionID": "ses-backend", "assistantMessageID": "msg-b-1", "id": "call-b-1", "executed": true }
+  },
+  {
+    "id": "evt-303",
+    "created": 1730000205000,
+    "type": "session.execution.failed",
+    "data": { "sessionID": "ses-backend", "error": { "name": "ToolError", "message": "patch failed" } }
+  },
+  {
+    "id": "evt-304",
+    "created": 1730000210000,
+    "type": "session.forked",
+    "data": { "sessionID": "ses-recovery", "parentID": "ses-orchestrator", "boundary": { "type": "through", "messageID": "msg-r-0" } }
+  },
+  {
+    "id": "evt-305",
+    "created": 1730000215000,
+    "type": "session.tool.success",
+    "data": { "sessionID": "ses-recovery", "assistantMessageID": "msg-r-1", "id": "call-r-1", "executed": true }
+  },
+  {
+    "id": "evt-306",
+    "created": 1730000220000,
+    "type": "session.execution.succeeded",
+    "data": { "sessionID": "ses-recovery" }
+  }
+]

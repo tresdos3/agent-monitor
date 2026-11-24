@@ -1,0 +1,22 @@
+{
+  "scenario": "test-execution",
+  "description": "Observed test result versus an unverified agent claim.",
+  "observed": [
+    {
+      "source": "shell tool call",
+      "command": "npm test",
+      "toolEvent": "session.tool.success",
+      "result": { "passed": 3, "failed": 1 },
+      "evidence": "observed"
+    }
+  ],
+  "declared": [
+    {
+      "source": "agent text",
+      "claim": "All tests pass",
+      "evidence": "declared",
+      "independentConfirmation": false
+    }
+  ],
+  "expectedDisplay": "Tests: 3 passed / 1 failed (observed); agent claim shown as Declared"
+}

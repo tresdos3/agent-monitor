@@ -1,0 +1,15 @@
+{
+  "name": "agent-monitor-fixtures",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Fake project used only to test Agent Monitor",
+  "scripts": {
+    "test": "vitest run",
+    "test:pass": "vitest run tests/api.test.ts",
+    "check": "vitest run tests/api.test.ts"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.7"
+  }
+}

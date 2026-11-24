@@ -1,0 +1,71 @@
+[
+  {
+    "id": "evt-1",
+    "created": 1730000000000,
+    "type": "session.created",
+    "location": { "directory": "/fake/agent-monitor-fixtures" },
+    "data": {
+      "sessionID": "ses-orchestrator",
+      "projectID": "prj-fixture",
+      "location": { "directory": "/fake/agent-monitor-fixtures" },
+      "slug": "orchestrator",
+      "version": "2"
+    }
+  },
+  {
+    "id": "evt-2",
+    "created": 1730000000500,
+    "type": "session.forked",
+    "data": {
+      "sessionID": "ses-backend",
+      "parentID": "ses-orchestrator",
+      "boundary": { "type": "through", "messageID": "msg-0" }
+    }
+  },
+  {
+    "id": "evt-3",
+    "created": 1730000001000,
+    "type": "session.tool.input.started",
+    "data": {
+      "sessionID": "ses-backend",
+      "assistantMessageID": "msg-1",
+      "id": "call-1",
+      "name": "edit"
+    }
+  },
+  {
+    "id": "evt-4",
+    "created": 1730000001200,
+    "type": "permission.asked",
+    "data": {
+      "id": "perm-1",
+      "sessionID": "ses-backend",
+      "action": "edit",
+      "resources": ["src/api.ts"],
+      "source": { "type": "tool", "messageID": "msg-1", "id": "call-1" }
+    }
+  },
+  {
+    "id": "evt-5",
+    "created": 1730000001300,
+    "type": "session.tool.failed",
+    "data": {
+      "sessionID": "ses-backend",
+      "assistantMessageID": "msg-1",
+      "id": "call-1",
+      "executed": true
+    }
+  },
+  {
+    "id": "evt-6",
+    "created": 1730000001400,
+    "type": "session.text.delta",
+    "data": { "sessionID": "ses-backend", "delta": "working" }
+  },
+  {
+    "id": "evt-7",
+    "created": 1730000001500,
+    "type": "totally.unknown.event",
+    "data": { "sessionID": "ses-docs" }
+  }
+]
