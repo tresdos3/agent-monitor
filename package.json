@@ -22,6 +22,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "verify:compat": "node scripts/verify-compat.mjs",
+    "test:lab": "bash scripts/verify-lab.sh",
+    "test:lab:tui": "expect scripts/test-lab-tui.exp",
     "prepublishOnly": "npm run verify:compat && npm run typecheck && npm test"
   },
   "dependencies": {

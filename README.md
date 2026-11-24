@@ -48,6 +48,7 @@ close` is in the palette.
 - `docs/FAKE_REPOSITORY.md` — separate test project
 - `docs/INSTALLATION.md` — loading instructions
 - `docs/PUBLISHING.md` — npm and GitHub release steps
+- `docs/AUTOMATED_TEST_LAB.md` — scripted LAB verification
 - `docs/ROADMAP.md` — phase overview
 - `PROJECT_STATUS.md` — what is actually done
 

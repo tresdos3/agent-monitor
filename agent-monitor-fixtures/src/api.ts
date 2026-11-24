@@ -31,20 +31,5 @@ export function isKnownUser(id: string): boolean {
 // Recorded by this backend-agent child from its host session parent_id.
 export const PARENT_SESSION_ID = "ses_df2363823ffeEqt89m2FynExh7"
 
-// Harmless API-work change for Agent Monitor scenario: a small user-lookup helper.
-export function hasAnyUsers(): boolean {
-  return users.size > 0
-}
 
-// Harmless addition: list the ids of all known users.
-export function listUserIds(): string[] {
-  return Array.from(users.keys())
-}
-
-// Harmless API-work change for Agent Monitor scenario: clear all known users.
-// Returns the number of users that were removed.
-export function clearUsers(): number {
-  const count = users.size
-  users.clear()
-  return count
-}
+// Fixture change: modified file for Git status testing.

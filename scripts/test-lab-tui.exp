@@ -1,0 +1,52 @@
+#!/usr/bin/expect -f
+# Best-effort TUI driver. Waits for text, sends keys, pauses at permission prompts.
+set timeout 20
+set fixture [file normalize [file join [file dirname $argv0] ".." "agent-monitor-fixtures"]]
+set session "agent-monitor-lab-exp-[pid]"
+
+proc capture {label} {
+    global session
+    set out [exec tmux capture-pane -p -t $session]
+    puts "--- $label ---"
+    puts [string trimright $out]
+    puts "--- end $label ---"
+}
+
+proc sendkey {key delay} {
+    global session
+    exec tmux send-keys -t $session $key
+    after $delay
+}
+
+exec tmux kill-session -t $session 2>/dev/null
+exec tmux new-session -d -s $session -x 140 -y 44 "cd '$fixture' && opencode"
+after 8000
+
+puts "=== TUI expect harness ==="
+puts "fixture: $fixture"
+puts "session: $session"
+
+capture "startup"
+
+# Ctrl+G opens the panel.
+exec tmux send-keys -t $session C-g
+after 2000
+capture "after Ctrl+G"
+
+# Switch tabs and capture.
+foreach {key label} {1 overview 2 timeline 3 harness 4 usage} {
+    sendkey $key 1500
+    capture "tab $label"
+}
+
+# Close panel.
+sendkey Escape 1000
+capture "after close"
+
+puts "=== MANUAL: run scenario 2 permission prompt yourself; no auto-approve ==="
+puts "Press ENTER here to tear down the tmux session..."
+flush stdout
+gets stdin
+
+exec tmux kill-session -t $session 2>/dev/null
+puts "done"
