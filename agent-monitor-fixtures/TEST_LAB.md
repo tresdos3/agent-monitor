@@ -12,7 +12,7 @@ opencode --version             # v2.4.1
 
 cd ..                          # from agent-monitor-fixtures to repo root
 npm run verify:compat
-npm test                       # 100 tests should pass
+npm test                       # 101 tests should pass
 ```
 
 The fake repo must have its dev dependencies installed:
@@ -300,21 +300,33 @@ Copy `fixtures/missing-evidence/` outside this repo and open the plugin there.
 
 ## Success checklist
 
-- [ ] Sidebar and footer canary render.
-- [ ] `Ctrl+G` opens/closes panel; `1`–`4` switch tabs.
-- [ ] Orchestrator plus child agents appear in the tree.
-- [ ] Permission prompt is native; monitor shows pending/resolved state.
-- [ ] Failure appears in timeline; recovery appears after it.
-- [ ] Git shows 3 changed files on `main`.
-- [ ] Usage shows token breakdown and provenance-labeled cost.
-- [ ] Harness groups checks by evidence level.
-- [ ] Filters and narrow layout work.
-- [ ] Missing-evidence location shows `Unavailable`, never guesses.
+- [x] Sidebar and footer canary render. — verified in pane capture: `MONITOR 0● 0◷`
+- [x] `Ctrl+G` opens/closes panel; `1`–`4` switch tabs. — all four headers captured
+- [x] Orchestrator plus child agents appear in the tree. — `Agents 5`, five definitions with `✓`/`●` glyphs
+- [ ] Permission prompt is native; monitor shows pending/resolved state. — native `Read demo.env` prompt observed; `Pending 1` shown; **left for a human to decide** (never auto-approved)
+- [ ] Failure appears in timeline; recovery appears after it. — failure observed (`npm test` → 3 pass / 1 fail); recovery prompt not run (needs the permission decision first)
+- [x] Git shows 3 changed files on `main`. — LAB verifier fixture Git checks passed
+- [x] Usage shows token breakdown and provenance-labeled cost. — tab `4` shows token categories and per-agent rows; cost shown as `Reported`/`Unavailable` honestly
+- [x] Harness groups checks by evidence level. — `Verified 0 Observed 8 Declared 0 Missing 1 Failed 0`, 89% evidenced
+- [x] Filters and narrow layout work. — three filter chips render on tab `2`; 60×30 resize survived with single-column layout
+- [ ] Missing-evidence location shows `Unavailable`, never guesses. — requires copying a fixture outside this repo; unit test covers `Unavailable` values
 
-## Automated audit result (2026-11-24)
+## Automated audit result (2026-11-24, final)
 
 `npm run test:lab` passed again: **27 passed, 0 failed, 0 warnings**. The
-checklist above was checked against live pane captures where possible:
+scenario 1 delegation prompt was then run live in the fixture TUI. The quota
+block cleared; four child sessions completed and the newest backend-agent
+session remained genuinely running because it is waiting on the native
+`Read demo.env` permission prompt (left for a human).
+
+Before the state converged, completed agents briefly showed green `●` with a
+`completed` note. A late `session.status: busy` can re-add a running override
+after a terminal event, so terminal session IDs are now latched until a new
+`session.execution.started` arrives. Final live capture: `Running 1`,
+`Completed 4`, with `✓ orchestrator`, `✓ docs-agent`, `✓ test-agent`, and
+`● backend-agent` (pending permission).
+
+The checklist above was checked against live pane captures where possible:
 
 | Checklist item | Result |
 |---|---|
@@ -327,11 +339,12 @@ checklist above was checked against live pane captures where possible:
 | Filters (`agent`/`kind`/`severity` chips) | PASS as UI — all three chips render on tab `2`; filter selection not exercised |
 | Narrow layout | PASS — 60×30 pane shows single column, no tab prefixes, no crash |
 | Missing-evidence location | NOT RUN — requires copying a fixture outside this repo |
-| Native permission prompt (scenario 2) | PENDING HUMAN — no permission was approved or rejected automatically |
-| Failure → recovery prompts (scenario 3) | BLOCKED — host reported `Free usage limit reached (QuotaExceeded)`; new model calls are refused |
-| Live running → completed transition (scenario 1) | PENDING HUMAN — a fresh delegation run is needed once quota allows |
+| Native permission prompt (scenario 2) | OBSERVED — `Read demo.env` prompt and `Pending 1`; decision left to a human |
+| Failure → recovery prompts (scenario 3) | PARTIAL — failure observed (`npm test` 3 pass / 1 fail); recovery prompt not run (blocked on the permission decision) |
+| Live running → completed transition (scenario 1) | PASS after convergence — transient green dots on completed agents fixed by the terminal-id latch |
 
-Environment note: host logs show `AI.Error.QuotaExceeded: Free usage limit
-reached` (2026-11-24 16:49Z). Agent Monitor now surfaces an observed
-`HOST QUOTA LIMIT` notice rather than inventing quota numbers or retrying.
-See `docs/COMPATIBILITY_REPORT.md` in the parent project.
+Environment note: an earlier host `AI.Error.QuotaExceeded: Free usage limit
+reached` (2026-11-24 16:49Z) blocked new runs; the later delegation succeeded.
+Agent Monitor surfaces an observed `HOST QUOTA LIMIT` notice rather than
+inventing quota numbers or retrying. See `docs/COMPATIBILITY_REPORT.md` in the
+parent project.

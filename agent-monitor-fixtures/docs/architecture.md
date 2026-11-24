@@ -107,3 +107,26 @@ onboarding case); `npm test` and `npm run test:pass` expectations remain as
 documented in `TEST_LAB.md`. No test command was run by this docs agent. No
 permission request was approved, no file was deleted, and no source file was
 modified by this agent.
+
+## Current-state note (child docs-agent)
+
+This child docs-agent inspected this file and the surrounding source/tests
+first, then changed only this file. Parent (orchestrator) session ID for this
+pass: `ses_df1779507ffe63vtSUi7Z4zJpH` (captured from `OPENCODE_SESSION_ID` in
+this child's environment, as instructed by the task). Verified this pass:
+`opencode --version` reports `opencode v2.4.1`; no `@opencode/*` packages or SDK
+imports exist in this fixture, so SDK compatibility reporting remains
+Unavailable (and the parent project's `docs/COMPATIBILITY_REPORT.md` is outside
+this fixture). Source is still the in-memory `Map` fixture: `src/api.ts` now
+also exports the `isKnownUser` helper in addition to `getUser`, `addUser`,
+`userCount`, and `removeUser`, and still carries
+`PARENT_SESSION_ID = "ses_df2363823ffeEqt89m2FynExh7"`. `src/database.ts`
+holds the row `Map`, `src/services.ts` composes them in `onboard`, and
+`tests/api.test.ts` (2 tests) plus `tests/services.test.ts` (1 intentionally
+failing duplicate-onboarding case) remain unchanged. `git status --short`
+shows the intentionally dirty fixture tree (modified `TEST_LAB.md`, deleted
+`docs/old-notes.md`, modified `src/api.ts`, untracked `src/generated.ts`). No
+test command was run by this docs agent; `npm test` (3 pass / 1 fail) and
+`npm run test:pass` (2 pass) remain documented expectations from `TEST_LAB.md`,
+not a fresh observation. No permission request was approved, no file was
+deleted, and no source file was modified by this agent.

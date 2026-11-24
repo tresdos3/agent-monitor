@@ -1,6 +1,6 @@
 # BUG: Agent definition state and counters remain stale after completion
 
-**Status:** FIXED — code, unit tests, LAB verifier, and a live fixture check pass; a fresh delegation walkthrough is still recommended
+**Status:** FIXED — code, tests, LAB verifier, and a live scenario 1 delegation run pass
 **Reported:** 2026-11-24
 **Severity:** Medium (misleading observability UI; no data loss)
 **Component:** TUI Overview panel / agent definitions / status derivation
@@ -155,12 +155,16 @@ The integration mock now mirrors the real client surface:
 - `npm run test:lab` — 27 passed, 0 failed, 0 warnings, including the fixture
   baseline, API outcome assertions (`succeeded`), all four TUI tabs, harness
   evidence groups, and the 60×30 narrow resize.
-- The lab harness does not run the delegation prompt, so it cannot reproduce
-  the user's exact stale-green sequence. A live fixture check of the finished
-  sessions was run instead (2026-11-24): the Overview showed
-  `Agents 5  Running 0  Pending 0`, five `✓` completed rows, and
-  `COMPLETED 5 / FAILED 0`. No green `●` remained. A fresh delegation
-  walkthrough is still recommended to confirm the live transition.
+- The lab harness does not run the delegation prompt, so a live scenario 1 run
+  was executed on 2026-11-24. During the first seconds, completed agents
+  briefly showed green `●` with a `completed` note; a late `session.status:
+  busy` re-added a running override after the terminal event. Terminal session
+  IDs are now latched until a new `session.execution.started` arrives. Final
+  capture after convergence: `Running 1`, `Completed 4`, with `✓ orchestrator`,
+  `✓ docs-agent`, `✓ test-agent`, and `● backend-agent` genuinely blocked on
+  the native `Read demo.env` permission prompt (left to a human).
+- An earlier finished-session check showed `Agents 5  Running 0  Pending 0`,
+  five `✓` rows, and `COMPLETED 5 / FAILED 0`.
 
 ---
 

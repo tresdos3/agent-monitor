@@ -21,6 +21,9 @@ All notable changes to this project are documented here.
   `undefined` optional keys, which caused `rpc.invalid_output` (HTTP 500) when
   an event had no `sessionID` or `location`. Verified with a fresh host server:
   the RPC now returns HTTP 200 with valid JSON.
+- Terminal session IDs are latched so a late `session.status: busy` cannot
+  briefly turn a completed agent green again. A new execution clears the latch.
+  Found by a live scenario 1 delegation run and covered by an integration test.
 
 ### Changed
 

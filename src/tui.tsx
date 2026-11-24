@@ -347,11 +347,17 @@ export default Plugin.define({
     }
 
     const stops: Array<() => void> = []
+    // Terminal execution events are durable; a late `session.status: busy`
+    // must not revive a running dot for the same session. A new execution
+    // clears the latch so a genuinely new run can show running again.
+    const terminalSessions = new Set<string>()
 
     stops.push(
       context.data.on("session.execution.started", (event) => {
         const normalized = normalizeEvent(event)
         if (!normalized) return
+        const sessionID = event.data?.sessionID
+        if (typeof sessionID === "string") terminalSessions.delete(sessionID)
         setTimeline((state) => appendUnique(state, normalized, 200))
         setRunning((count) => count + 1)
       }),
@@ -368,6 +374,7 @@ export default Plugin.define({
           setRunning((count) => Math.max(0, count - 1))
           const sessionID = event.data?.sessionID
           if (typeof sessionID !== "string") return
+          terminalSessions.add(sessionID)
           setStatusOverrides((previous) => {
             const next = new Map(previous)
             next.delete(sessionID)
@@ -438,7 +445,9 @@ export default Plugin.define({
         const rawStatus = typeof data?.status?.type === "string" ? data.status.type : undefined
         if (sessionID && rawStatus) {
           const mapped = mapSessionStatus(rawStatus)
-          setStatusOverrides((previous) => new Map(previous).set(sessionID, mapped.status))
+          if (!terminalSessions.has(sessionID)) {
+            setStatusOverrides((previous) => new Map(previous).set(sessionID, mapped.status))
+          }
           setStatusNotes((previous) => {
             const next = new Map(previous)
             if (mapped.note) next.set(sessionID, mapped.note)

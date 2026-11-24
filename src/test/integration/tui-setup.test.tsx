@@ -313,6 +313,38 @@ describe("Phase 2 timeline and permission TUI setup", () => {
     }
   })
 
+  it("ignores a late busy status for an already completed session", async () => {
+    const ctx = makeContext()
+    const cleanup = await (monitor.setup as (context: unknown) => unknown)(ctx.context)
+
+    const terminal = (type: string) =>
+      ctx.handlers.get(type)?.({
+        id: `evt-${type}`,
+        created: 1,
+        type,
+        data: { sessionID: "ses-late", error: undefined },
+      })
+    const busy = () =>
+      ctx.handlers.get("session.status")?.({
+        id: "evt-busy",
+        created: 2,
+        type: "session.status",
+        data: { sessionID: "ses-late", status: { type: "busy" } },
+      })
+
+    terminal("session.execution.succeeded")
+    busy()
+    // A new run must re-enable live running state.
+    ctx.handlers.get("session.execution.started")?.({
+      id: "evt-start",
+      created: 3,
+      type: "session.execution.started",
+      data: { sessionID: "ses-late" },
+    })
+    busy()
+    expect(() => (cleanup as () => void)()).not.toThrow()
+  })
+
   it("observes a quota failure without fabricating quota state", async () => {
     const ctx = makeContext()
     const cleanup = await (monitor.setup as (context: unknown) => unknown)(ctx.context)

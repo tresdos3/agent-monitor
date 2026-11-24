@@ -11,7 +11,7 @@ owner approval
 
 - `npm run verify:compat` passes: the host TUI 2.4.1 matches `@opencode/plugin@2.4.1`.
 - `npm run typecheck` passes.
-- `npm test` passes: 100 tests across 17 files, including stability tests for
+- `npm test` passes: 101 tests across 17 files, including stability tests for
   5,000 events, 100 sessions, degraded RPC/VCS, and 50 cleanup cycles.
 - `npm run test:lab` passes on 2026-11-24: 27 passed, 0 failed, 0 warnings
   (static config, fixture baseline, API assertions, and the tmux TUI harness).
