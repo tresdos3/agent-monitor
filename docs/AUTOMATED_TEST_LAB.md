@@ -16,7 +16,9 @@ Runs:
 - fixture baseline (`npm test` → 3 pass / 1 fail, `npm run test:pass` → 2 pass)
 - fixture Git state checks
 - API assertions via `opencode api get /api/session?directory=<fixture>`
-- a best-effort tmux TUI harness: `Ctrl+G`, tabs `1`–`4`, text capture, `Esc`
+- a best-effort tmux TUI harness: `Ctrl+G`, tabs `1`–`4`, text capture,
+  harness evidence-group labels, a visible changed-file name, a narrow
+  terminal resize survival check (60×30), and `Esc`
 
 The TUI portion uses text capture only. It cannot verify colors, spacing, or
 layout. Failures in the TUI portion are warnings; static/API failures are hard

@@ -47,6 +47,10 @@ function makeContext(panelOpenReturns = true) {
     (mutation: (draft: Record<string, unknown>) => void) => mutation(settingsState),
   ] as const)
   const vcsStatus = vi.fn(async () => ({ location: { directory: "/fake" }, data: [] }))
+  const vcsGet = vi.fn(async () => ({
+    location: { directory: "/fake" },
+    data: { branch: { current: "main", default: "main" } },
+  }))
   const locationDefault = vi.fn(() => ({ directory: "/fake" }))
   const vcsInfo = vi.fn(() => ({ branch: { current: "main", default: "main" } }))
   const modelList = vi.fn(() => [])
@@ -87,6 +91,7 @@ function makeContext(panelOpenReturns = true) {
     filterState,
     settingsState,
     vcsStatus,
+    vcsGet,
     locationDefault,
     vcsInfo,
     modelList,
@@ -128,7 +133,7 @@ function makeContext(panelOpenReturns = true) {
       },
       client: {
         rpc: clientRpc,
-        vcs: { status: vcsStatus },
+        vcs: { get: vcsGet, status: vcsStatus },
         session: { list: clientSessionList, active: clientSessionActive },
       },
       storage: { memory: storageMemory, store: storageStore },
@@ -200,6 +205,7 @@ describe("Phase 2 timeline and permission TUI setup", () => {
       initial: { compact: false, showEstimate: false },
     })
     expect(ctx.vcsStatus).toHaveBeenCalled()
+    expect(ctx.vcsGet).toHaveBeenCalledWith({ location: { directory: "/fake" } })
 
     expect(ctx.slot.mock.calls.map((call) => call[0].append)).toEqual([
       "sidebar.content",
@@ -310,6 +316,7 @@ describe("Phase 2 timeline and permission TUI setup", () => {
   it("degrades gracefully when RPC and VCS are unavailable", async () => {
     const ctx = makeContext()
     ctx.rpcHistory.mockRejectedValue(new Error("RPC unavailable"))
+    ctx.vcsGet.mockRejectedValue(new Error("VCS unavailable"))
     ctx.vcsStatus.mockRejectedValue(new Error("VCS unavailable"))
     ctx.modelSync.mockRejectedValue(new Error("model catalog unavailable"))
 

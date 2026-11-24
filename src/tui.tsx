@@ -6,7 +6,7 @@ import {
   permissionRequestToView,
   type PermissionView,
 } from "./adapters/permissions/permission.js"
-import { agentInfoToDefinition, filterVisibleDefinitions, type AgentLink } from "./adapters/agents/definitions.js"
+import { agentInfoToDefinition, filterVisibleDefinitions, linkDefinitions } from "./adapters/agents/definitions.js"
 import { projectFromVcs } from "./adapters/git/vcs.js"
 import { inspectHarness } from "./adapters/harness/inspector.js"
 import { testEvidenceFromEvents } from "./adapters/project/test-evidence.js"
@@ -95,30 +95,18 @@ export default Plugin.define({
         activeSessions: activeSessions(),
       }),
     )
-    const definitions = createMemo(() => {
-      const links = new Map<string, AgentLink>()
-      for (const node of nodes()) {
-        if (!node.agent) continue
-        const link: AgentLink = {
-          sessionID: node.id,
+    const definitions = createMemo(() =>
+      linkDefinitions(
+        filterVisibleDefinitions(agentDefinitions()),
+        nodes().map((node) => ({
+          id: node.id,
+          agent: node.agent,
+          lastActivity: node.lastActivity,
           status: node.status === "waiting" ? "unknown" : node.status,
-          note: node.statusNote,
-        }
-        const existing = links.get(node.agent)
-        if (!existing || (link.status === "running" && existing.status !== "running")) links.set(node.agent, link)
-      }
-      return filterVisibleDefinitions(agentDefinitions()).map((definition) => {
-        const link = links.get(definition.id)
-        return link
-          ? {
-              ...definition,
-              runningSessionID: link.status === "running" ? link.sessionID : undefined,
-              status: link.status,
-              statusNote: link.note,
-            }
-          : definition
-      })
-    })
+          statusNote: node.statusNote,
+        })),
+      ),
+    )
     const filteredTimeline = createMemo(() => ({
       ...EMPTY_TIMELINE,
       events: filterEvents(timeline(), filters),
@@ -276,10 +264,15 @@ export default Plugin.define({
     const refreshProject = async (): Promise<void> => {
       try {
         const location = context.location ?? context.data.location.default()
+        const directory = location?.directory
         void context.data.location.model.sync(location).catch(() => {})
-        const info = context.data.location.vcs.info(location)
-        const status = await context.client.vcs.status()
-        setProject(projectFromVcs(info, status, Date.now()))
+        const [info, status] = directory
+          ? await Promise.all([
+              context.client.vcs.get({ location: { directory } }),
+              context.client.vcs.status({ location: { directory } }),
+            ])
+          : [context.data.location.vcs.info(location), await context.client.vcs.status()]
+        setProject(projectFromVcs(info && "data" in info ? info.data : info, status, Date.now()))
       } catch {
         setProject({ changedFiles: [] })
       }
@@ -313,8 +306,7 @@ export default Plugin.define({
     }, 5_000)
     void refreshPermissions()
     refreshUsage()
-    void refreshProject()
-    void refreshHarness()
+    void refreshProject().then(refreshHarness)
 
     const rpcStops: Array<() => void> = []
     const hydrateHistory = async (): Promise<void> => {

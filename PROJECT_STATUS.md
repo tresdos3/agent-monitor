@@ -1,6 +1,6 @@
 # Project Status
 
-**Last updated:** 2026-11-23
+**Last updated:** 2026-11-24
 **Declared host version:** v2.4.1 (verified by `npm run verify:compat`)
 **Dev toolchain:** Node v26.13.1 (fnm), npm 11.20.0
 **Current phase:** Phase 5 — code complete
@@ -11,8 +11,10 @@ owner approval
 
 - `npm run verify:compat` passes: the host TUI 2.4.1 matches `@opencode/plugin@2.4.1`.
 - `npm run typecheck` passes.
-- `npm test` passes: 57 tests across 13 files, including stability tests for
+- `npm test` passes: 94 tests across 16 files, including stability tests for
   5,000 events, 100 sessions, degraded RPC/VCS, and 50 cleanup cycles.
+- `npm run test:lab` passes on 2026-11-24: 27 passed, 0 failed, 0 warnings
+  (static config, fixture baseline, API assertions, and the tmux TUI harness).
 - `npm pack --dry-run` produces a 36-file, ~34.7 kB tarball; test sources are
   excluded.
 - All product modules are implemented:
@@ -49,8 +51,10 @@ owner approval
 
 ## Open bugs
 
+- None open in code.
 - `docs/BUG-agent-state-stale.md` — agent definition state and Overview counters
-  can remain stale after completion. Reproduced by user; fix in progress.
+  can remain stale after completion. Fix is in code with regression tests;
+  the live delegation walkthrough is still pending owner verification.
 
 ## Known limitations
 

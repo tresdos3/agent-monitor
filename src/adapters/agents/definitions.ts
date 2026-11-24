@@ -24,6 +24,42 @@ export function agentInfoToDefinition(info: AgentInfo, link?: AgentLink): AgentD
   }
 }
 
+export interface DefinitionLinkSource {
+  readonly id: string
+  readonly agent?: string
+  readonly lastActivity?: number
+  readonly status: "running" | "idle" | "completed" | "failed" | "unknown"
+  readonly statusNote?: string
+}
+
+/** Link each definition to its newest session so stale runs cannot win. */
+export function linkDefinitions(
+  definitions: readonly AgentDefinition[],
+  sessions: readonly DefinitionLinkSource[],
+): readonly AgentDefinition[] {
+  const newest = new Map<string, { lastActivity: number; session: DefinitionLinkSource }>()
+  for (const session of sessions) {
+    if (!session.agent) continue
+    const lastActivity = session.lastActivity ?? 0
+    const existing = newest.get(session.agent)
+    if (!existing || lastActivity >= existing.lastActivity) {
+      newest.set(session.agent, { lastActivity, session })
+    }
+  }
+
+  return definitions.map((definition) => {
+    const entry = newest.get(definition.id)
+    if (!entry) return definition
+    const status = entry.session.status
+    return {
+      ...definition,
+      runningSessionID: status === "running" ? entry.session.id : undefined,
+      status,
+      statusNote: entry.session.statusNote,
+    }
+  })
+}
+
 export function filterVisibleDefinitions(
   definitions: readonly AgentDefinition[],
   options: { readonly includeHidden?: boolean; readonly includeBuiltin?: boolean } = {},

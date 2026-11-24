@@ -1,6 +1,6 @@
 import type { AgentInfo } from "@opencode/client"
 import { describe, expect, it } from "vitest"
-import { agentInfoToDefinition, filterVisibleDefinitions } from "../../adapters/agents/definitions.js"
+import { agentInfoToDefinition, filterVisibleDefinitions, linkDefinitions } from "../../adapters/agents/definitions.js"
 
 function info(id: string, mode: "subagent" | "primary" | "all" = "subagent", hidden = false): AgentInfo {
   return {
@@ -51,6 +51,28 @@ describe("agentInfoToDefinition", () => {
     })
     expect(definition.status).toBe("completed")
     expect(definition.runningSessionID).toBeUndefined()
+  })
+})
+
+describe("linkDefinitions", () => {
+  const definition = agentInfoToDefinition(info("backend-agent"))
+
+  it("uses the newest session for an agent, not an older running one", () => {
+    const linked = linkDefinitions([definition], [
+      { id: "ses-old", agent: "backend-agent", lastActivity: 1000, status: "running" },
+      { id: "ses-new", agent: "backend-agent", lastActivity: 2000, status: "completed" },
+    ])
+    expect(linked[0].status).toBe("completed")
+    expect(linked[0].runningSessionID).toBeUndefined()
+  })
+
+  it("keeps running state when the newest session is still active", () => {
+    const linked = linkDefinitions([definition], [
+      { id: "ses-old", agent: "backend-agent", lastActivity: 1000, status: "completed" },
+      { id: "ses-new", agent: "backend-agent", lastActivity: 3000, status: "running" },
+    ])
+    expect(linked[0].status).toBe("running")
+    expect(linked[0].runningSessionID).toBe("ses-new")
   })
 })
 

@@ -133,8 +133,9 @@ The primary agent list comes from the location-scoped
 SDK-independent `AgentDefinition` with mode, hidden flag, and best-effort
 built-in detection. Built-ins and hidden agents are excluded by default.
 
-Each definition is linked to the first matching live session (`session.agent ===
-definition.id`) so running state is observed, never invented. Durable `Session.Info.outcome` takes precedence over transient `session.status`
+Each definition is linked to the **newest** matching session
+(`session.agent === definition.id`, ordered by `time.updated`), so a stale
+running session cannot override a newer completed one. Durable `Session.Info.outcome` takes precedence over transient `session.status`
 overrides, so completed and failed agents cannot keep a green running dot even
 if a late `busy` event arrives. Overview counters are computed from agent
 definitions, not every historical session. Both the client cache and the server

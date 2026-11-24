@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented here.
 
+## [Unreleased]
+
+### Fixed
+
+- Agent definitions now link to the **newest** session for their agent ID, so a
+  stale running session cannot turn a completed agent green. The Overview
+  `Running` metric now uses definition-derived counts like the rest of the panel.
+- Project/VCS refresh is location-scoped via `vcs.get`/`vcs.status` with
+  `location.directory`, and the integration mock mirrors that client surface.
+
+### Changed
+
+- Added regression coverage for duplicate agent IDs (stale running + newer
+  completed) and extended the LAB verifier with harness evidence labels, a
+  visible changed-file check, and a 60×30 resize survival check.
+
 ## [1.0.0] — 2026-11-23
 
 ### Phase 5 — Stabilization and Distribution

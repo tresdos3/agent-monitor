@@ -86,18 +86,43 @@ if command -v tmux >/dev/null; then
   CAP="$(tmux capture-pane -p -t "$SESSION" 2>/dev/null || true)"
   if echo "$CAP" | grep -q "AGENT MONITOR"; then ok "TUI panel opened with Ctrl+G"; else warn "TUI panel not detected after Ctrl+G"; fi
 
+  TAB1=""; TAB2=""; TAB3=""; TAB4=""
   for key in 1 2 3 4; do
     tmux send-keys -t "$SESSION" "$key"
     sleep 2
     CAP="$(tmux capture-pane -p -t "$SESSION" 2>/dev/null || true)"
     case "$key" in
-      1) NEEDLE="AGENTS" ;;
-      2) NEEDLE="TIMELINE" ;;
-      3) NEEDLE="VERIFICATION SUMMARY" ;;
-      4) NEEDLE="TOKEN METRICS" ;;
+      1) NEEDLE="AGENTS"; TAB1="$CAP" ;;
+      2) NEEDLE="TIMELINE"; TAB2="$CAP" ;;
+      3) NEEDLE="VERIFICATION SUMMARY"; TAB3="$CAP" ;;
+      4) NEEDLE="TOKEN METRICS"; TAB4="$CAP" ;;
     esac
     if echo "$CAP" | grep -qi "$NEEDLE"; then ok "TUI tab $key shows $NEEDLE"; else warn "TUI tab $key did not show $NEEDLE"; fi
   done
+
+  # Harness evidence groups.
+  for label in VERIFIED OBSERVED MISSING FAILED; do
+    if echo "$TAB3" | grep -qi "$label"; then ok "harness summary shows $label"; else warn "harness summary missing $label"; fi
+  done
+
+  # Changed files: only the first row is guaranteed to be in the scroll viewport.
+  if echo "$TAB4" | grep -q "src/api.ts"; then ok "usage tab shows changed file src/api.ts"; else warn "usage tab missing changed file"; fi
+
+  # Cost/provenance rows are below the scroll fold; verify visually via TEST_LAB.
+
+  # Narrow terminal pass.
+  tmux resize-window -t "$SESSION" -x 60 -y 30 2>/dev/null || true
+  sleep 2
+  tmux send-keys -t "$SESSION" 1
+  sleep 2
+  NARROW="$(tmux capture-pane -p -t "$SESSION" 2>/dev/null || true)"
+  if tmux has-session -t "$SESSION" 2>/dev/null; then
+    ok "narrow layout resize did not crash the TUI"
+  else
+    warn "TUI session died during narrow resize"
+  fi
+  tmux resize-window -t "$SESSION" -x 140 -y 44 2>/dev/null || true
+  sleep 1
 
   tmux send-keys -t "$SESSION" Escape
   sleep 1

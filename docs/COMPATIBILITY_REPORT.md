@@ -120,8 +120,10 @@ provenance.
 ## VCS
 
 `context.data.location.vcs.info(location?)` (branch), and
-`context.client.vcs.get()/status()/branch.list()/diff()`. `Vcs.FileStatus` is
-`{ file, status: added|deleted|modified, additions, deletions }`.
+`context.client.vcs.get()/status()/branch.list()/diff()`. Both `get` and
+`status` accept `{ location: { directory } }`, which the monitor passes so
+project state is scoped to the active location rather than the process default.
+`Vcs.FileStatus` is `{ file, status: added|deleted|modified, additions, deletions }`.
 
 ## Unresolved / documented limitations
 
@@ -150,8 +152,10 @@ provenance.
   events are deduplicated by `event.id` to avoid double counting.
 - `PermissionRequest` has no `created` field, so permission timestamps come
   from the observed `permission.asked` event or render as `Unavailable`.
-- Phase 3 uses `context.client.vcs.status()`, whose response wraps the file
-  list as `{ location, data: Vcs.FileStatus[] }`.
+- Phase 3 uses `context.client.vcs.get()` and `vcs.status()` with the active
+  `location.directory`; the status response wraps the file list as
+  `{ location, data: Vcs.FileStatus[] }` and the get response as
+  `{ location, data: VcsInfo }`.
 - Usage events carry no pricing version/date; the monitor maintains a dated
   pricing-snapshot constant and labels all computed figures `Estimated`.
 - Phase 4 inspects project files from the CLI process's local location. For a

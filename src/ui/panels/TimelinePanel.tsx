@@ -99,7 +99,7 @@ export function TimelinePanel(props: TimelinePanelProps) {
       onSelect={(id) => props.onSection(id as MonitorSection)}
       status={[
         { label: "Agents", value: props.definitions().length, tone: "info" },
-        { label: "Running", value: props.nodes().filter((node) => node.status === "running").length, tone: "success" },
+        { label: "Running", value: counts().running, tone: "success" },
         { label: "Pending", value: props.pending(), tone: "warning" },
         { label: "History", value: historyLabel(props.historyStatus()), tone: historyTone() },
       ]}

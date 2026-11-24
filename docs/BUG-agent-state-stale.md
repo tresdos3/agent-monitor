@@ -1,6 +1,6 @@
 # BUG: Agent definition state and counters remain stale after completion
 
-**Status:** OPEN — reproduced by user, not yet fixed
+**Status:** FIXED IN CODE — regression tests pass; live walkthrough still pending
 **Reported:** 2026-11-24
 **Severity:** Medium (misleading observability UI; no data loss)
 **Component:** TUI Overview panel / agent definitions / status derivation
@@ -105,7 +105,7 @@ AGENTS
 
 ## Attempted fixes already applied
 
-All of these are in the current working tree; `npm test` reports 92 passing tests.
+All of these are applied; `npm test` reports 94 passing tests.
 
 1. **Session scoping**
    - Added `sessionBelongsToLocation()` in `src/adapters/sessions/session.ts`.
@@ -128,8 +128,35 @@ All of these are in the current working tree; `npm test` reports 92 passing test
    - `AgentDefinitionList` maps `running → success`, `completed → info`,
      `failed → error`, `idle → muted`, `unknown → faint`.
 
-The bug was reported as still present after these changes. A full the host TUI
-restart was recommended but not yet confirmed as tested.
+The bug was reported as still present after these changes. A full host restart
+was recommended but not yet confirmed as tested.
+
+### Additional fix applied
+
+Definition linking now selects the **newest** session per `agent` ID instead of
+the first running match. Durable `outcome` remains authoritative. A regression
+test covers an old running session plus a newer succeeded session with the same
+agent ID.
+
+The Overview status line `Running` metric previously counted every session node,
+so stale historical sessions could exceed the definition count. It now uses the
+same definition-derived counts as the RUNNING/WAITING/COMPLETED/FAILED grid and
+the sidebar.
+
+The integration mock now mirrors the real client surface:
+`context.client.vcs.get({ location: { directory } })` alongside
+`vcs.status(...)`. This keeps the location-scoped project refresh covered.
+
+### Verification (2026-11-24)
+
+- `npm run typecheck` — passes.
+- `npm test` — 94 tests across 16 files pass, including the duplicate-agent-ID
+  regression test.
+- `npm run test:lab` — 27 passed, 0 failed, 0 warnings, including the fixture
+  baseline, API outcome assertions (`succeeded`), all four TUI tabs, harness
+  evidence groups, and the 60×30 narrow resize.
+- The lab harness does not run the delegation prompt, so it cannot reproduce
+  the user's exact stale-green sequence. Live visual confirmation remains.
 
 ---
 
