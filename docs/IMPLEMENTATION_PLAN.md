@@ -127,8 +127,8 @@ Delivered:
 - Documentation consistency pass and release notes.
 - MIT `LICENSE` added and included in the package.
 
-- `npm run verify:compat` passes; `npm pack --dry-run` produces a 36-file
-  tarball; 57 tests pass.
+- `npm run verify:compat` passes; `npm pack --dry-run` produces a 65-file
+  tarball; 94 tests pass across 16 files.
 - Manual verification in a live TUI is still recommended before publishing.
 
 **Gate:** npm publishing requires explicit owner approval and has not been

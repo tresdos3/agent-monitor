@@ -15,7 +15,7 @@ owner approval
   5,000 events, 100 sessions, degraded RPC/VCS, and 50 cleanup cycles.
 - `npm run test:lab` passes on 2026-11-24: 27 passed, 0 failed, 0 warnings
   (static config, fixture baseline, API assertions, and the tmux TUI harness).
-- `npm pack --dry-run` produces a 36-file, ~34.7 kB tarball; test sources are
+- `npm pack --dry-run` produces a 65-file, ~55.1 kB tarball; test sources are
   excluded.
 - All product modules are implemented:
   - agent overview, hierarchy, activity, session navigation
@@ -35,8 +35,9 @@ owner approval
 
 ## Delivered files
 
-- Commits `5f2e800` through `4459e35` cover Phases 0–4 plus the HarnessPanel
-  crash fix.
+- `a290acd` — initial release of Phases 0–5.
+- `84a80e7` — automated LAB verifier and TUI harness.
+- `54181cd` — stale-agent-state fix and location-scoped VCS refresh.
 - Phase 5 additions: `scripts/verify-compat.mjs`, stability/degradation tests,
   finalized installation and release docs.
 - Package version: `1.0.0`.
