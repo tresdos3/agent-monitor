@@ -105,7 +105,7 @@ AGENTS
 
 ## Attempted fixes already applied
 
-All of these are applied; `npm test` reports 94 passing tests.
+All of these are applied; `pnpm test` reports 94 passing tests.
 
 1. **Session scoping**
    - Added `sessionBelongsToLocation()` in `src/adapters/sessions/session.ts`.
@@ -149,10 +149,10 @@ The integration mock now mirrors the real client surface:
 
 ### Verification (2026-11-24)
 
-- `npm run typecheck` — passes.
-- `npm test` — 94 tests across 16 files pass, including the duplicate-agent-ID
+- `pnpm typecheck` — passes.
+- `pnpm test` — 94 tests across 16 files pass, including the duplicate-agent-ID
   regression test.
-- `npm run test:lab` — 27 passed, 0 failed, 0 warnings, including the fixture
+- `pnpm test:lab` — 27 passed, 0 failed, 0 warnings, including the fixture
   baseline, API outcome assertions (`succeeded`), all four TUI tabs, harness
   evidence groups, and the 60×30 narrow resize.
 - The lab harness does not run the delegation prompt, so a live scenario 1 run
@@ -238,7 +238,7 @@ Ranked by likelihood:
 3. Inspect the event log for late `session.status: busy` events after completion:
 
    ```sh
-   grep -i 'session.status' ~/.local/share/opencode/log/opencode.log | tail -40
+   grep -i 'session.status' <host-log-dir>/opencode.log | tail -40
    ```
 
 4. Write a failing unit/integration test that reproduces:

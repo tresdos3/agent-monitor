@@ -24,7 +24,7 @@ Pure functions only; no the host TUI runtime.
 - `harness.test.ts` — evidence levels, acceptance-criteria detection, and
   out-of-scope path checks using the fake repository.
 
-Run: `npm test`.
+Run: `pnpm test`.
 
 ### Integration (`src/test/integration`)
 
@@ -36,7 +36,7 @@ Run: `npm test`.
 - disposes subscription and slot on cleanup,
 - tolerates malformed events.
 
-Run: `npm test`.
+Run: `pnpm test`.
 
 ### TUI / manual (human, in a real terminal)
 
@@ -79,8 +79,8 @@ the host TUI integration.
 ## Quality gates after every meaningful change
 
 ```sh
-npm run typecheck
-npm test
+pnpm typecheck
+pnpm test
 ```
 
 ## Stability tests (Phase 5)
@@ -89,7 +89,7 @@ npm test
   tree, and 50 setup/cleanup cycles dispose every subscription and slot.
 - Integration test for degraded capabilities: RPC and VCS failures leave the
   monitor live and do not throw.
-- `npm run verify:compat` checks the installed host version against the
+- `pnpm verify:compat` checks the installed host version against the
   pinned `@opencode/plugin` dependency.
 
 - `ui-responsive.test.ts` — width classification, metric column counts, empty

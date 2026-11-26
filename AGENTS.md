@@ -17,7 +17,7 @@ Work in this repository as an engineering agent, not a proposal writer.
 3. Build a minimal working slice before expanding.
 4. Use `agent-monitor-fixtures/` for repeatable scenarios; keep fixture
    simulation separate from real host adapters.
-5. Run `npm run typecheck` and `npm test` after every meaningful change.
+5. Run `pnpm typecheck` and `pnpm test` after every meaningful change.
 6. Never claim a feature works without testing it.
 7. Record unsupported features and blockers in `docs/COMPATIBILITY_REPORT.md`.
 8. Keep `PROJECT_STATUS.md` updated.

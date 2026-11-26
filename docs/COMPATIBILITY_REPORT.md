@@ -8,7 +8,7 @@
 
 | Item | Value |
 |---|---|
-| Binary | `/opt/homebrew/Cellar/opencode-v2/2.4.1/bin/opencode` |
+| Binary | `opencode` on `PATH` (v2.4.1, Homebrew or equivalent) |
 | Service | `http://127.0.0.1:49374` (raw REST requires auth) |
 | Node (dev) | v26.13.1 (via fnm), satisfies OpenTUI `>=26.4.0` |
 | `@opencode/plugin` | 2.4.1 |
@@ -17,7 +17,7 @@
 | OpenTUI peer | `>=0.8.0` (installed 0.9.9 for typechecking) |
 | solid-js peer | `>=1.9.0` |
 
-The local `~/.config/opencode` directory contains a **V1** plugin
+The user config directory (`<config-dir>/opencode`) contains a **V1** plugin
 (`herdr-agent-state.js`, using `chat.message`, `tool.execute.before`,
 `session.updated`) and an older-V2 TUI plugin using the plain-object API
 (`api.route.current`, `api.state.session.get`). Neither is a valid pattern for
@@ -48,7 +48,7 @@ A plugin package is loaded through `exports`:
 Loading:
 
 - Global CLI plugin: `cli.json` `plugins` array.
-- Global server+TUI plugin: `~/.config/opencode/opencode.json(c)` `plugins`.
+- Global server+TUI plugin: user-level `opencode.json(c)` `plugins`.
 - Per-project: `opencode.json(c)` `plugins`, or `.opencode/plugins/<name>/{index.ts,tui.ts}`.
 - There is no project-local `cli.json`, so a TUI-only plugin cannot be configured per project via `cli.json`.
 

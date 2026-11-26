@@ -4,6 +4,7 @@
   "description": "Full Development Observability for the host TUI",
   "type": "module",
   "license": "MIT",
+  "packageManager": "pnpm@12.4.2",
   "exports": {
     ".": "./src/index.ts",
     "./tui": "./src/tui.tsx",
@@ -24,7 +25,7 @@
     "verify:compat": "node scripts/verify-compat.mjs",
     "test:lab": "bash scripts/verify-lab.sh",
     "test:lab:tui": "expect scripts/test-lab-tui.exp",
-    "prepublishOnly": "npm run verify:compat && npm run typecheck && npm test"
+    "prepublishOnly": "pnpm run verify:compat && pnpm run typecheck && pnpm test"
   },
   "dependencies": {
     "@opencode/client": "2.4.1",
@@ -33,7 +34,7 @@
   "peerDependencies": {
     "@opentui/core": ">=0.8.0",
     "@opentui/solid": ">=0.8.0",
-    "solid-js": ">=1.9.0"
+    "solid-js": "^1.9.0"
   },
   "devDependencies": {
     "@opentui/core": "0.9.9",

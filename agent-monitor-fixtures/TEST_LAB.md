@@ -285,7 +285,7 @@ Copy `fixtures/missing-evidence/` outside this repo and open the plugin there.
 
 | Problem | Check |
 |---|---|
-| No sidebar | `~/.config/opencode/cli.json` → `"session": { "sidebar": "auto" }` |
+| No sidebar | user-level `cli.json` → `"session": { "sidebar": "auto" }` |
 | `No test files found` | Ensure `agent-monitor-fixtures/vitest.config.ts` exists |
 | No permission prompt | Ensure `demo.env` exists and `.opencode/opencode.json` has `read *.env → ask` |
 | No agents listed | Check `.opencode/agents/*.md` exist |

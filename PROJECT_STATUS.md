@@ -1,20 +1,24 @@
 # Project Status
 
-**Last updated:** 2026-11-24
-**Declared host version:** v2.4.1 (verified by `npm run verify:compat`)
-**Dev toolchain:** Node v26.13.1 (fnm), npm 11.20.0
+**Last updated:** 2026-11-25
+**Declared host version:** v2.4.1 (verified by `pnpm verify:compat`)
+**Dev toolchain:** Node v26.13.1 (fnm), pnpm 12.4.2
 **Current phase:** Phase 5 — code complete
-**Release status:** packaged and MIT-licensed; npm publish requires explicit
-owner approval
+**Release status:** MIT-licensed; installable from GitHub via
+`opencode plugin add github:tresdos3/agent-monitor#main`; npm registry publish
+still requires explicit owner approval (the original name is taken on npm).
 
 ## What actually works (tested)
 
-- `npm run verify:compat` passes: the host TUI 2.4.1 matches `@opencode/plugin@2.4.1`.
-- `npm run typecheck` passes.
-- `npm test` passes: 101 tests across 17 files, including stability tests for
+- `pnpm verify:compat` passes: the host TUI 2.4.1 matches `@opencode/plugin@2.4.1`.
+- `pnpm typecheck` passes.
+- `pnpm test` passes: 101 tests across 17 files, including stability tests for
   5,000 events, 100 sessions, degraded RPC/VCS, and 50 cleanup cycles.
-- `npm run test:lab` passes on 2026-11-24: 27 passed, 0 failed, 0 warnings
+- `pnpm test:lab` passes on 2026-11-25: 27 passed, 0 failed, 0 warnings
   (static config, fixture baseline, API assertions, and the tmux TUI harness).
+- pnpm migration verified: `packageManager: pnpm@12.4.2`, `pnpm-lock.yaml`,
+  `pnpm-workspace.yaml` with the esbuild build-script allowlist; no
+  `package-lock.json`. `pnpm peers check` reports no issues.
 - RPC history verified against a fresh host server: `POST
   /api/rpc/agent-monitor/history` returns HTTP 200 with valid JSON after
   omitting `undefined` optional keys from normalized events.
@@ -22,7 +26,7 @@ owner approval
   labeled `HOST QUOTA LIMIT` hint in the Overview panel and sidebar.
 - Live fixture Overview check on 2026-11-24: `Agents 5  Running 0  Pending 0`,
   five `✓` completed agent rows, `COMPLETED 5 / FAILED 0`.
-- `npm pack --dry-run` produces a 65-file, ~55.1 kB tarball; test sources are
+- `pnpm pack --dry-run` produces a 65-file, ~55.1 kB tarball; test sources are
   excluded.
 - All product modules are implemented:
   - agent overview, hierarchy, activity, session navigation
